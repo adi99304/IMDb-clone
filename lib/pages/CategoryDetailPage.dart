@@ -26,14 +26,13 @@ class CategoryDetailPage extends StatelessWidget {
         title: Text("CATEGORY $category DETAILS"),
       ),
       body: Container(
-        color: backgroundColors[
-            category - 1],
+        color: backgroundColors[category - 1],
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Category $category",
+              "Romance",
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -48,12 +47,9 @@ class CategoryDetailPage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            SizedBox(
-  
-              height: 24),
+            SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
-              },
+              onPressed: () {},
               child: Text(
                 "Explore $category",
                 style: TextStyle(fontSize: 16),
