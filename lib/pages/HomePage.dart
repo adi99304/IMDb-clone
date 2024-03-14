@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
-                    color: Colors.yellow,
+                    color: Color(0xFF292B37),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
                         size: 30,
                       ),
                       Container(
-                        width: 300,
+                        width: 280,
                         margin: EdgeInsets.only(left: 5),
                         child: TextFormField(
                           style: TextStyle(color: Colors.white),
