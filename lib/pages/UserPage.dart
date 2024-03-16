@@ -32,6 +32,7 @@ class UserPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
+          color: Colors.white,
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Navigate back
