@@ -34,9 +34,9 @@ class _MyAppState extends State<MyApp> {
       ),
       home: AnimatedSplashScreen(
           splash: Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-            child: Container(  
+              child: ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: Container(
               width: 300,
               height: 300,
               color: Colors.amber,
@@ -44,15 +44,14 @@ class _MyAppState extends State<MyApp> {
                 child: Text(
                   "IMDb",
                   style: TextStyle(
-                    
                     color: Colors.black,
                     fontSize: 85,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
               ),
-            ),)
-          ),
+            ),
+          )),
           duration: 2500,
           splashTransition: SplashTransition.scaleTransition,
           backgroundColor: Colors.black,

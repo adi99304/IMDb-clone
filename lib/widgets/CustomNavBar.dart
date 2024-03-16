@@ -36,7 +36,9 @@ class CustomNavBar extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, "userpage");
+            },
             child: Icon(
               Icons.favorite,
               size: 35,
@@ -44,9 +46,7 @@ class CustomNavBar extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, "userpage");
-            },
+            onTap: () {},
             child: Icon(
               Icons.person,
               size: 35,
