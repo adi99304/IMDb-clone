@@ -1,15 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          color: Colors.white,
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       backgroundColor: Color(0xFF0F111D),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 150), // Space before the first container
+              SizedBox(
+                height: 0,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 50.0,
+                      backgroundImage: AssetImage('images/profile.jpeg'),
+                    ),
+                    SizedBox(height: 4.0),
+                    Text(
+                      'ADITYA',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4.0),
+                    Text(
+                      '2022.aditya.hegde@ves.ac.in',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 0), // Space before the first container
               _buildAccountContainer('Account', Icons.account_circle),
               SizedBox(height: 0), // Space between containers
               _buildAccountContainer('Watchlist', Icons.watch_later),
