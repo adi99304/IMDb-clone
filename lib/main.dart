@@ -6,6 +6,7 @@ import 'package:project/pages/CategoryPage.dart';
 import 'package:project/pages/HomePage.dart';
 import 'package:project/pages/LoginPage.dart';
 import 'package:project/pages/MoviePage.dart';
+import 'package:project/pages/ProfilePage.dart';
 import 'package:project/pages/UserPage.dart';
 
 void main() {
@@ -118,6 +119,7 @@ class _MyAppState extends State<MyApp> {
         "moviePage": (context) => MoviePage(),
         "userpage": (context) => UserPage(),
         "categorydetailpage": (context) => CategoryDetailPage(category: 1),
+        "profilePage": (context) => ProfilePage(),
       },
     );
   }
