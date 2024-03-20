@@ -65,7 +65,7 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 0), // Space between containers
               _buildAccountContainer('About', Icons.person),
               SizedBox(height: 0), // Space between containers
-              _buildAccountContainer('Sign Out', Icons.arrow_back_sharp),
+              _buildAccountContainer('Sign Out', Icons.arrow_back_sharp,),
             ],
           ),
         ),
