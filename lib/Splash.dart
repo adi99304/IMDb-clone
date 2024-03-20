@@ -10,19 +10,22 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  @override
   void initState() {
     super.initState();
-    _navigatetohome();
+    _navigateToLoginAfterDelay();
   }
 
-  _navigatetohome() async {
-    await Future.delayed(Duration(milliseconds: 2000), () {});
+  _navigateToLoginAfterDelay() async {
+    await Future.delayed(Duration(milliseconds: 2000)); // Wait for 2 seconds
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => LoginPage(
-                  title: "FLUTTER LOGIN",
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(
+          title: "FLUTTER LOGIN",
+        ),
+      ),
+    );
   }
 
   @override
@@ -37,13 +40,13 @@ class _SplashState extends State<Splash> {
               width: 100,
               color: Colors.blue,
             ),
-            Container(
-              child: Text(
-                '2 sec ruko bhai',
-                style: TextStyle(
-                    color: Colors.lightBlue,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
+            SizedBox(height: 20),
+            Text(
+              '2 sec ruko bhai',
+              style: TextStyle(
+                color: Colors.lightBlue,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
