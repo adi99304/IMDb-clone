@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project/firebase_options.dart';
 import 'package:project/pages/CategoryDetailPage.dart';
 import 'package:project/pages/CategoryPage.dart';
 import 'package:project/pages/HomePage.dart';
@@ -7,6 +8,7 @@ import 'package:project/pages/LoginPage.dart';
 import 'package:project/pages/MoviePage.dart';
 import 'package:project/pages/ProfilePage.dart';
 import 'package:project/pages/UserPage.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -37,7 +39,34 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFF0F111D),
       ),
-      home: LoginPage(title: 'LOGIN'),
+      home: AnimatedSplashScreen(
+        splash: Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: Container(
+              width: 300,
+              height: 300,
+              color: Colors.amber,
+              child: Center(
+                child: Text(
+                  "IMDb",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 85,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        duration: 2500,
+        splashTransition: SplashTransition.scaleTransition,
+        backgroundColor: Colors.black,
+        nextScreen: LoginPage(
+          title: 'LOGIN',
+        ),
+      ),
       routes: {
         "loginpage": (context) => LoginPage(title: "Flutter Login"),
         "homepage": (context) => HomePage(),
@@ -45,7 +74,6 @@ class _MyAppState extends State<MyApp> {
         "categorydetailpage": (context) => CategoryDetailPage(category: 1),
         "moviePage": (context) => MoviePage(),
         "userpage": (context) => UserPage(),
-        "categorydetailpage": (context) => CategoryDetailPage(category: 1),
         "profilePage": (context) => ProfilePage(),
       },
     );
