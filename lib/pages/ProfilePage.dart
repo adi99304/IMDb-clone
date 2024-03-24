@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:project/pages/LoginPage.dart';
+import 'package:project/pages/UserPage.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -53,19 +54,19 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 0), // Space before the first container
-              _buildAccountContainer('Account', Icons.account_circle),
+              _buildAccountContainer(context, 'Account', Icons.account_circle),
               SizedBox(height: 0), // Space between containers
-              _buildAccountContainer('Watchlist', Icons.watch_later),
+              _buildAccountContainer(context, 'Watchlist', Icons.watch_later),
               SizedBox(height: 0), // Space between containers
-              _buildAccountContainer('Display', Icons.display_settings),
+              _buildAccountContainer(
+                  context, 'Display', Icons.display_settings),
               SizedBox(height: 0), // Space between containers
-              _buildAccountContainer('Notifications', Icons.email),
+              _buildAccountContainer(context, 'Notifications', Icons.email),
               SizedBox(height: 0), // Space between containers
-              _buildAccountContainer('Favourites', Icons.favorite_outline),
+              _buildAccountContainer(
+                  context, 'Favourites', Icons.favorite_outline),
               SizedBox(height: 0), // Space between containers
-              _buildAccountContainer('About', Icons.person),
-              SizedBox(height: 0), // Space between containers
-              _buildAccountContainer('Sign Out', Icons.arrow_back_sharp,),
+              _buildAccountContainer(context, 'Sign Out', Icons.exit_to_app),
             ],
           ),
         ),
@@ -73,36 +74,61 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountContainer(String text, IconData icon) {
-    return Container(
-      margin: EdgeInsets.only(top: 30),
-      width: 400,
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.amberAccent,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(width: 45),
-          Text(
-            text,
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 25,
+  Widget _buildAccountContainer(
+      BuildContext context, String text, IconData icon) {
+    return GestureDetector(
+      onTap: () {
+        if (text == 'Sign Out') {
+          // Navigate to LoginPage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LoginPage(
+                      title: '',
+                    )),
+          );
+        } else if (text == 'Favourites' || text == 'Watchlist') {
+          // Navigate to UserPage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => UserPage()),
+          );
+        } else if (text == 'Display') {
+          // Show prompt for changing brightness (implement this)
+          // For now, just print a message
+          print('Display settings pressed');
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 30),
+        width: 400,
+        height: 60,
+        decoration: BoxDecoration(
+          color: Colors.amberAccent,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(width: 45),
+            Text(
+              text,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+                fontSize: 25,
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: Icon(
-              icon,
-              color: Colors.black,
-              size: 30,
+            Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Icon(
+                icon,
+                color: Colors.black,
+                size: 30,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

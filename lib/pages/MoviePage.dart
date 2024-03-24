@@ -4,6 +4,20 @@ import 'package:project/widgets/MoviePageButtons.dart';
 import 'package:project/widgets/RecommendedWidget.dart';
 
 class MoviePage extends StatelessWidget {
+  final String movieName;
+  final String movieType;
+  final double rating;
+  final String movieImage;
+  final String description;
+
+  MoviePage({
+    required this.movieName,
+    required this.movieType,
+    required this.rating,
+    required this.movieImage,
+    required this.description,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +26,7 @@ class MoviePage extends StatelessWidget {
           Opacity(
             opacity: 0.4,
             child: Image.asset(
-              "images/1.jpg",
+              movieImage,
               height: 450,
               width: 400,
               fit: BoxFit.cover,
@@ -56,20 +70,25 @@ class MoviePage extends StatelessWidget {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.red.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 8,
-                                )
-                              ]),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.red.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 8,
+                              )
+                            ],
+                          ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              "images/1.jpg",
-                              height: 250,
-                              width: 180,
+                            child: ClipRect(
+                              clipper: MovieImageClipper(), // Custom clipper
+                              child: Image.asset(
+                                movieImage,
+                                height: 250, // Same height
+                                width: 200, // Increased width
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -105,7 +124,7 @@ class MoviePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "DOCTOR STRANGE 2",
+                          movieName,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 30,
@@ -114,7 +133,7 @@ class MoviePage extends StatelessWidget {
                         ),
                         SizedBox(height: 15),
                         Text(
-                          '''Doctor Strange teams up with a mysterious teenage girl from his dreams who can travel across multiverses, to battle multiple threats, including other-universe versions of himself, which threaten to wipe out millions across the multiverse. They seek help from Wanda the Scarlet Witch, Wong and others.''',
+                          description,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -134,5 +153,24 @@ class MoviePage extends StatelessWidget {
       ),
       bottomNavigationBar: CustomNavBar(),
     );
+  }
+}
+
+class MovieImageClipper extends CustomClipper<Rect> {
+  @override
+  Rect getClip(Size size) {
+    // Adjust the left offset to move the image towards the right
+    // Reduce the left offset and increase the width to maintain equal display from all sides
+    return Rect.fromLTWH(
+      -40, // Move towards right
+      size.height * 0.01, // Adjusted height offset
+      size.width * 1.3, // Increased width
+      size.height * 1.0, // Adjusted height
+    );
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Rect> oldClipper) {
+    return false;
   }
 }
