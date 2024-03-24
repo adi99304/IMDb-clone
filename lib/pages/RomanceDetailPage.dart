@@ -7,8 +7,10 @@ class RomanceDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Romance Detail"),
       ),
-      body: Center(
-        child: Text("Details for Romance Genre"),
+      body: Container(
+        child: Center(
+          child: Text("Details for Romance Genre"),
+        ),
       ),
     );
   }
