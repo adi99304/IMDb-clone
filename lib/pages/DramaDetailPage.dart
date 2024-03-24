@@ -71,7 +71,7 @@ class _DramaDetailPageState extends State<DramaDetailPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
-          'Comedy Movies',
+          'Drama Movies',
           style: TextStyle(
             color: Colors.yellow,
             fontWeight: FontWeight.bold,

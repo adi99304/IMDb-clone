@@ -72,7 +72,7 @@ class _RomanceDetailPageState extends State<RomanceDetailPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
-          'Comedy Movies',
+          'Romance Movies',
           style: TextStyle(
             color: Colors.yellow,
             fontWeight: FontWeight.bold,

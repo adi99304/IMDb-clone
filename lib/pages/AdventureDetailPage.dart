@@ -67,7 +67,7 @@ class _AdventureDetailPageState extends State<AdventureDetailPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
-          'Comedy Movies',
+          'Adventure Movies',
           style: TextStyle(
             color: Colors.yellow,
             fontWeight: FontWeight.bold,
