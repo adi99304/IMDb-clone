@@ -35,17 +35,13 @@ class _ComedyDetailPageState extends State<ComedyDetailPage> {
     'comedy13.jpeg',
     'comedy14.jpeg',
     'comedy15.jpeg',
-    'comedy16.jpeg',
-    'comedy17.jpeg',
 
   ];
 
   final List<String> movieNames = [
     'Now You See Me 2',
-    'Boys',
     'Golmaal Fun Unlimited',
     'Chillar Party',
-    'Poshter Boys',
     'Chup Chup Ke',
     '3 Idiots',
     'Welcome',
@@ -60,10 +56,10 @@ class _ComedyDetailPageState extends State<ComedyDetailPage> {
     'Delhi Belly',
   ];
   
-  List<bool> isLiked = List.generate(9, (index) => false);
+  List<bool> isLiked = List.generate(15, (index) => false);
 
   // Dummy ratings for demonstration
-  final List<double> ratings = [7.8, 8, 9, 7.9, 10, 9, 6.9, 8, 9.9, 9.1];
+  final List<double> ratings = [7.8, 7.9, 10, 9, 6.9, 8, 9.9, 9.1,10,9.5,8,7.6,8.7,4.5,8.9];
 
   @override
   Widget build(BuildContext context) {
