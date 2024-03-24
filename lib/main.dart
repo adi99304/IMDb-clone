@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFF0F111D),
+       scaffoldBackgroundColor: Color(0xFF0F111D),
       ),
       home: AnimatedSplashScreen(
         splash: Center(
@@ -72,6 +72,7 @@ class _MyAppState extends State<MyApp> {
         "categoryPage": (context) => CategoryPage(),
         "categorydetailpage": (context) => CategoryDetailPage(category: 1),
         "userpage": (context) => UserPage(),
+        "categorydetailpage": (context) => CategoryDetailPage(category: 1),
         "profilePage": (context) => ProfilePage(),
       },
     );

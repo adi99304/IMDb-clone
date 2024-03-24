@@ -51,7 +51,7 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
   List<bool> isLiked = List.generate(9, (index) => false);
 
   // Dummy ratings for demonstration
-  final List<double> ratings = [7.8, 8, 9, 7.9, 10, 9, 6.9, 8, 9.9, 9.1];
+  final List<double> ratings = [7.8, 8, 9, 7.9, 10, 9, 6.9, 8, 9.9, 9.1,6,2.9,3,6.8,9,8,7.5];
 
   @override
   Widget build(BuildContext context) {
