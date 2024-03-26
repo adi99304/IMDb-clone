@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project/firebase_options.dart';
+import 'package:project/pages/AccountPage.dart';
 import 'package:project/pages/CategoryDetailPage.dart';
 import 'package:project/pages/CategoryPage.dart';
 import 'package:project/pages/HomePage.dart';
@@ -74,6 +75,7 @@ class _MyAppState extends State<MyApp> {
         "userpage": (context) => UserPage(),
         "categorydetailpage": (context) => CategoryDetailPage(category: 1),
         "profilePage": (context) => ProfilePage(),
+        "accountpage": (context) => AccountPage(),
       },
     );
   }

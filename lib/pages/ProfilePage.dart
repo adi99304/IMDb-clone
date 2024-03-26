@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/pages/AccountPage.dart';
 import 'package:project/pages/LoginPage.dart';
 import 'package:project/pages/UserPage.dart';
 
@@ -97,6 +98,9 @@ class ProfilePage extends StatelessWidget {
           // Show prompt for changing brightness (implement this)
           // For now, just print a message
           print('Display settings pressed');
+        } else if (text == 'Account') {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AccountPage()));
         }
       },
       child: Container(
