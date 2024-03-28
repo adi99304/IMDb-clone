@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:project/widgets/CustomNavBar.dart';
 import 'package:project/widgets/MoviePageButtons.dart';
 import 'package:project/widgets/RecommendedWidget.dart';
+import 'package:video_player/video_player.dart'; // Import video_player package
 
-class MoviePage extends StatelessWidget {
+class MoviePage extends StatefulWidget {
   final String movieName;
   final String movieType;
   final double rating;
   final String movieImage;
   final String description;
+  final String videoUrl; // Add video URL
 
   MoviePage({
     required this.movieName,
@@ -16,7 +18,34 @@ class MoviePage extends StatelessWidget {
     required this.rating,
     required this.movieImage,
     required this.description,
+    required this.videoUrl, // Initialize with URL
   });
+
+  @override
+  _MoviePageState createState() => _MoviePageState();
+}
+
+class _MoviePageState extends State<MoviePage> {
+  late VideoPlayerController _controller; // Video player controller
+  bool _isVideoLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=d8a1570b-e61a-45c6-8cec-011843584623',
+    )..initialize().then((_) {
+        setState(() {
+          _isVideoLoading = false;
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +55,7 @@ class MoviePage extends StatelessWidget {
           Opacity(
             opacity: 0.4,
             child: Image.asset(
-              movieImage,
+              widget.movieImage,
               height: 450,
               width: 400,
               fit: BoxFit.cover,
@@ -41,15 +70,15 @@ class MoviePage extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
+                        IconButton(
+                          icon: Icon(
                             Icons.arrow_back,
                             color: Colors.white,
                             size: 30,
                           ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                         ),
                         InkWell(
                           onTap: () {},
@@ -84,7 +113,7 @@ class MoviePage extends StatelessWidget {
                             child: ClipRect(
                               clipper: MovieImageClipper(), // Custom clipper
                               child: Image.asset(
-                                movieImage,
+                                widget.movieImage,
                                 height: 250, // Same height
                                 width: 200, // Increased width
                                 fit: BoxFit.cover,
@@ -107,10 +136,16 @@ class MoviePage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: Icon(
-                            Icons.play_arrow,
-                            color: Colors.white,
-                            size: 60,
+                          child: IconButton(
+                            // Replace Icon with IconButton
+                            icon: Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 60,
+                            ),
+                            onPressed: () {
+                              _controller.play();
+                            },
                           ),
                         ),
                       ],
@@ -124,7 +159,7 @@ class MoviePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          movieName,
+                          widget.movieName,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 30,
@@ -133,7 +168,7 @@ class MoviePage extends StatelessWidget {
                         ),
                         SizedBox(height: 15),
                         Text(
-                          description,
+                          widget.description,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -149,6 +184,17 @@ class MoviePage extends StatelessWidget {
               ),
             ),
           ),
+          if (_isVideoLoading)
+            Center(
+              child: CircularProgressIndicator(), // Loading indicator
+            ),
+          if (!_isVideoLoading && _controller.value.isInitialized)
+            Positioned.fill(
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              ),
+            ),
         ],
       ),
       bottomNavigationBar: CustomNavBar(),
@@ -159,13 +205,11 @@ class MoviePage extends StatelessWidget {
 class MovieImageClipper extends CustomClipper<Rect> {
   @override
   Rect getClip(Size size) {
-    // Adjust the left offset to move the image towards the right
-    // Reduce the left offset and increase the width to maintain equal display from all sides
     return Rect.fromLTWH(
-      -40, // Move towards right
-      size.height * 0.01, // Adjusted height offset
-      size.width * 1.3, // Increased width
-      size.height * 1.0, // Adjusted height
+      -40,
+      size.height * 0.01,
+      size.width * 1.3,
+      size.height * 1.0,
     );
   }
 

@@ -72,7 +72,7 @@ class NewMoviesWidget extends StatelessWidget {
                         movieType: movieTypes[index],
                         rating: ratings[index],
                         movieImage: "images/${index + 1}.jpg",
-                        description: "Your movie description here", // Add actual description here
+                        description: "Your movie description here", videoUrl: '', // Add actual description here
                       ),
                     ),
                   );
