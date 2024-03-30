@@ -31,12 +31,17 @@ dependencies:
   flutter:
     sdk: flutter
   animated_splash_screen:
-
-  # The following adds the Cupertino Icons font to your application.
+  carousel_slider: 
+  smooth_page_indicator:
+  firebase_storage: 11.6.0
+  video_player: ^2.6.1
+  # The followingads the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
+  cloud_firestore: ^4.15.10
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:

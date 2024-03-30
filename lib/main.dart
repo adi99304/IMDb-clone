@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project/firebase_options.dart';
+import 'package:project/pages/AccountPage.dart';
 import 'package:project/pages/CategoryDetailPage.dart';
 import 'package:project/pages/CategoryPage.dart';
 import 'package:project/pages/HomePage.dart';
@@ -10,6 +11,7 @@ import 'package:project/pages/UserPage.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-       scaffoldBackgroundColor: Color(0xFF0F111D),
+        scaffoldBackgroundColor: Colors.yellow,
       ),
       home: AnimatedSplashScreen(
         splash: Center(
@@ -44,27 +46,31 @@ class _MyAppState extends State<MyApp> {
             borderRadius: BorderRadius.circular(40),
             child: Container(
               width: 300,
-              height: 300,
-              color: Colors.amber,
+              height: 500,
+              color: Colors.black, // Set container color to black
               child: Center(
-                child: Text(
-                  "IMDb",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 85,
-                    fontWeight: FontWeight.w900,
-                  ),
+                child: AnimatedTextKit(
+                  animatedTexts: [
+                    WavyAnimatedText(
+                      'IMDB',
+                      textStyle: TextStyle(
+                        color: Colors.yellow, // Set text color to yellow
+                        fontSize: 65,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                  isRepeatingAnimation: true,
+                  totalRepeatCount: 4, // Play animation only once
                 ),
               ),
             ),
           ),
         ),
-        duration: 2500,
+        duration: 5000,
         splashTransition: SplashTransition.scaleTransition,
         backgroundColor: Colors.black,
-        nextScreen: LoginPage(
-          title: 'LOGIN',
-        ),
+        nextScreen: LoginPage(title: 'LOGIN'),
       ),
       routes: {
         "loginpage": (context) => LoginPage(title: "Flutter Login"),
@@ -74,6 +80,7 @@ class _MyAppState extends State<MyApp> {
         "userpage": (context) => UserPage(),
         "categorydetailpage": (context) => CategoryDetailPage(category: 1),
         "profilePage": (context) => ProfilePage(),
+        "accountpage": (context) => AccountPage(),
       },
     );
   }
