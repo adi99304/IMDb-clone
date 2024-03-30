@@ -11,6 +11,7 @@ class UpcomingWidget extends StatefulWidget {
 class _UpcomingWidgetState extends State<UpcomingWidget> {
   late CarouselController _carouselController;
   late List<String> _videoUrls;
+  late List<String> _imageUrls; // Add list for image URLs
   late List<VideoPlayerController> _controllers;
   int _currentSlideIndex = 0;
 
@@ -21,6 +22,13 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
     _videoUrls = [
       // Add your video URLs here
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=ab104d05-624b-42af-90d9-984cdcd6b424',
+      // Add more video URLs if needed
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=ab104d05-624b-42af-90d9-984cdcd6b424',
+    ];
+    _imageUrls = [
+      // Add your image URLs here
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2Fdownload%20(2).jpeg?alt=media&token=855787d3-1156-4a18-bd60-00b0c08a36a8',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2Fimages.jpeg?alt=media&token=e0931de1-0e4b-4912-8ac6-ad843db78edd',
     ];
     _controllers = List.generate(
       _videoUrls.length,
@@ -83,7 +91,6 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
-            // Wrap the CarouselSlider.builder with Container
             color: Colors.black, // Set background color to black
             child: CarouselSlider.builder(
               carouselController: _carouselController,
@@ -102,7 +109,9 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
               itemBuilder: (BuildContext context, int index, int realIndex) {
                 return Stack(
                   children: [
+                    // Video Player
                     VideoPlayer(_controllers[index]),
+                    // Play/Pause Button
                     Center(
                       child: IconButton(
                         icon: Icon(
@@ -119,6 +128,31 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
                             }
                           });
                         },
+                      ),
+                    ),
+                    // Image Overlay
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (_controllers[index].value.isPlaying) {
+                            _controllers[index].pause();
+                          } else {
+                            _controllers[index].play();
+                          }
+                        });
+                      },
+                      child: Visibility(
+                        visible: !_controllers[index].value.isPlaying,
+                        child: Container(
+                          color: Colors.transparent,
+                          alignment: Alignment.center,
+                          child: Image.network(
+                            _imageUrls[index], // Use corresponding image URL
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                        ),
                       ),
                     ),
                   ],
