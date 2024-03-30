@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserPage extends StatelessWidget {
   final List<String> moviePosterNames = [
-    'movie_poster_1.jpeg',
-    'movie_poster_2.jpeg',
-    'movie_poster_3.jpeg',
-    'movie_poster_4.jpeg',
-    'movie_poster_5.jpeg',
-    'movie_poster_6.jpeg',
-    'movie_poster_7.jpeg',
-    'movie_poster_8.jpeg',
-    'movie_poster_9.jpeg',
-    // Add more file names as needed
-  ];
-  final List<String> favoritemovies = [
     'movie_poster_1.jpeg',
     'movie_poster_2.jpeg',
     'movie_poster_3.jpeg',
@@ -45,31 +35,65 @@ class UserPage extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 50.0,
-                    backgroundImage: AssetImage('images/profile.jpeg'),
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Aditya',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    '2022.aditya.hegde@ves.ac.in',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ],
+              child: FutureBuilder<User?>(
+                future: FirebaseAuth.instance.authStateChanges().first,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    User? user = snapshot.data;
+                    return FutureBuilder<DocumentSnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('profiles')
+                          .doc(user!.email)
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          Map<String, dynamic> userData =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 50.0,
+                                backgroundImage:
+                                    AssetImage('images/profile.jpeg'),
+                              ),
+                              SizedBox(height: 16.0),
+                              Text(
+                                userData['name'] ?? 'No Name',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
+                              Text(
+                                user.email ?? 'No Email',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Text('User not found');
+                        }
+                      },
+                    );
+                  } else {
+                    return Text('User not found');
+                  }
+                },
               ),
             ),
             Expanded(
@@ -112,8 +136,7 @@ class UserPage extends StatelessWidget {
                     ),
                     SizedBox(height: 8.0),
                     SizedBox(
-                      height:
-                          225.0, // Adjust this value according to your needs
+                      height: 225.0,
                       child: ListView.builder(
                         itemCount: moviePosterNames.length,
                         scrollDirection: Axis.horizontal,
@@ -150,8 +173,7 @@ class UserPage extends StatelessWidget {
                     ]),
                     Padding(padding: EdgeInsets.all(8.0)),
                     SizedBox(
-                      height:
-                          225.0, // Adjust this value according to your needs
+                      height: 225.0,
                       child: ListView.builder(
                         itemCount: moviePosterNames.length,
                         scrollDirection: Axis.horizontal,

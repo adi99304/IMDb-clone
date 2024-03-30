@@ -11,8 +11,9 @@ class MyApp extends StatelessWidget {
       ),
       home: ComedyDetailPage(),
     );
+  }
 }
-}
+
 class ComedyDetailPage extends StatefulWidget {
   @override
   _ComedyDetailPageState createState() => _ComedyDetailPageState();
@@ -35,7 +36,6 @@ class _ComedyDetailPageState extends State<ComedyDetailPage> {
     'comedy13.jpeg',
     'comedy14.jpeg',
     'comedy15.jpeg',
-
   ];
 
   final List<String> movieNames = [
@@ -55,15 +55,32 @@ class _ComedyDetailPageState extends State<ComedyDetailPage> {
     'Phir Hera Pheri',
     'Delhi Belly',
   ];
-  
+
   List<bool> isLiked = List.generate(15, (index) => false);
 
   // Dummy ratings for demonstration
-  final List<double> ratings = [7.8, 7.9, 10, 9, 6.9, 8, 9.9, 9.1,10,9.5,8,7.6,8.7,4.5,8.9];
+  final List<double> ratings = [
+    7.8,
+    7.9,
+    10,
+    9,
+    6.9,
+    8,
+    9.9,
+    9.1,
+    10,
+    9.5,
+    8,
+    7.6,
+    8.7,
+    4.5,
+    8.9
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
@@ -226,5 +243,3 @@ class _ComedyDetailPageState extends State<ComedyDetailPage> {
     );
   }
 }
-  
- 

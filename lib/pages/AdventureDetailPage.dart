@@ -11,8 +11,9 @@ class MyApp extends StatelessWidget {
       ),
       home: AdventureDetailPage(),
     );
+  }
 }
-}
+
 class AdventureDetailPage extends StatefulWidget {
   @override
   _AdventureDetailPageState createState() => _AdventureDetailPageState();
@@ -34,8 +35,6 @@ class _AdventureDetailPageState extends State<AdventureDetailPage> {
     'ad (3).jpeg',
     'ad (2).jpeg',
     'ad (1).jpeg',
-    
-
   ];
 
   final List<String> movieNames = [
@@ -53,17 +52,32 @@ class _AdventureDetailPageState extends State<AdventureDetailPage> {
     'Raiders of the Lost Ark',
     'The Mummy',
     'Moana',
-
   ];
-  
+
   List<bool> isLiked = List.generate(14, (index) => false);
 
   // Dummy ratings for demonstration
-  final List<double> ratings = [ 7.9, 10, 9, 6.9, 8, 9.9, 9.1,10,9.5,8,7.6,8.7,4.5,8.9];
+  final List<double> ratings = [
+    7.9,
+    10,
+    9,
+    6.9,
+    8,
+    9.9,
+    9.1,
+    10,
+    9.5,
+    8,
+    7.6,
+    8.7,
+    4.5,
+    8.9
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
@@ -226,5 +240,3 @@ class _AdventureDetailPageState extends State<AdventureDetailPage> {
     );
   }
 }
-  
- 
