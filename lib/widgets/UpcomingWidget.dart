@@ -11,7 +11,7 @@ class UpcomingWidget extends StatefulWidget {
 class _UpcomingWidgetState extends State<UpcomingWidget> {
   late CarouselController _carouselController;
   late List<String> _videoUrls;
-  late List<String> _imageUrls; // Add list for image URLs
+  late List<String> _imageUrls;
   late List<VideoPlayerController> _controllers;
   int _currentSlideIndex = 0;
 
@@ -20,13 +20,10 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
     super.initState();
     _carouselController = CarouselController();
     _videoUrls = [
-      // Add your video URLs here
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=ab104d05-624b-42af-90d9-984cdcd6b424',
-      // Add more video URLs if needed
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=ab104d05-624b-42af-90d9-984cdcd6b424',
     ];
     _imageUrls = [
-      // Add your image URLs here
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2Fdownload%20(2).jpeg?alt=media&token=855787d3-1156-4a18-bd60-00b0c08a36a8',
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2Fimages.jpeg?alt=media&token=e0931de1-0e4b-4912-8ac6-ad843db78edd',
     ];
@@ -41,10 +38,9 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
     for (final controller in _controllers) {
       await controller.initialize();
       controller.setLooping(false);
-      controller.play(); // Play the video by default
+      controller.play();
       controller.addListener(() {
         if (controller.value.position == controller.value.duration) {
-          // Video playback finished, move to the next slide
           _carouselController.nextPage();
         }
       });
@@ -91,7 +87,7 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
-            color: Colors.black, // Set background color to black
+            color: Colors.black,
             child: CarouselSlider.builder(
               carouselController: _carouselController,
               itemCount: _videoUrls.length,
@@ -107,55 +103,69 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
                 },
               ),
               itemBuilder: (BuildContext context, int index, int realIndex) {
-                return Stack(
-                  children: [
-                    // Video Player
-                    VideoPlayer(_controllers[index]),
-                    // Play/Pause Button
-                    Center(
-                      child: IconButton(
-                        icon: Icon(
-                          _controllers[index].value.isPlaying
-                              ? Icons.pause
-                              : Icons.play_arrow,
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (_controllers[index].value.isPlaying) {
+                        _controllers[index].pause();
+                      } else {
+                        _controllers[index].play();
+                      }
+                    });
+                  },
+                  child: Stack(
+                    children: [
+                      VideoPlayer(_controllers[index]),
+                      Center(
+                        child: IconButton(
+                          icon: Icon(
+                            _controllers[index].value.isPlaying
+                                ? Icons.pause
+                                : Icons.play_arrow,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              if (_controllers[index].value.isPlaying) {
+                                _controllers[index].pause();
+                              } else {
+                                _controllers[index].play();
+                              }
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            if (_controllers[index].value.isPlaying) {
-                              _controllers[index].pause();
-                            } else {
-                              _controllers[index].play();
-                            }
-                          });
-                        },
                       ),
-                    ),
-                    // Image Overlay
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (_controllers[index].value.isPlaying) {
-                            _controllers[index].pause();
-                          } else {
-                            _controllers[index].play();
-                          }
-                        });
-                      },
-                      child: Visibility(
+                      Positioned(
+                        bottom: 10,
+                        right: 10,
+                        child: IconButton(
+                          icon: Icon(Icons.fullscreen),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullscreenTrailerScreen(
+                                  videoUrl: _videoUrls[index],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Visibility(
                         visible: !_controllers[index].value.isPlaying,
                         child: Container(
                           color: Colors.transparent,
                           alignment: Alignment.center,
                           child: Image.network(
-                            _imageUrls[index], // Use corresponding image URL
+                            _imageUrls[index],
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),
@@ -180,6 +190,51 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class FullscreenTrailerScreen extends StatefulWidget {
+  final String videoUrl;
+
+  FullscreenTrailerScreen({required this.videoUrl});
+
+  @override
+  _FullscreenTrailerScreenState createState() =>
+      _FullscreenTrailerScreenState();
+}
+
+class _FullscreenTrailerScreenState extends State<FullscreenTrailerScreen> {
+  late VideoPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+        _videoPlayerController.play();
+      });
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: _videoPlayerController.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _videoPlayerController.value.aspectRatio,
+                child: VideoPlayer(_videoPlayerController),
+              )
+            : CircularProgressIndicator(),
+      ),
     );
   }
 }
