@@ -1,8 +1,10 @@
+// 'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=d8a1570b-e61a-45c6-8cec-011843584623',
+
 import 'package:flutter/material.dart';
 import 'package:project/widgets/CustomNavBar.dart';
 import 'package:project/widgets/MoviePageButtons.dart';
 import 'package:project/widgets/RecommendedWidget.dart';
-import 'package:video_player/video_player.dart'; // Import video_player package
+import 'package:video_player/video_player.dart';
 
 class MoviePage extends StatefulWidget {
   final String movieName;
@@ -10,7 +12,7 @@ class MoviePage extends StatefulWidget {
   final double rating;
   final String movieImage;
   final String description;
-  final String videoUrl; // Add video URL
+  final String videoUrl;
 
   MoviePage({
     required this.movieName,
@@ -18,7 +20,7 @@ class MoviePage extends StatefulWidget {
     required this.rating,
     required this.movieImage,
     required this.description,
-    required this.videoUrl, // Initialize with URL
+    required this.videoUrl,
   });
 
   @override
@@ -26,19 +28,12 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  late VideoPlayerController _controller; // Video player controller
-  bool _isVideoLoading = true;
+  late VideoPlayerController _controller;
+  bool _isVideoLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(
-      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=d8a1570b-e61a-45c6-8cec-011843584623',
-    )..initialize().then((_) {
-        setState(() {
-          _isVideoLoading = false;
-        });
-      });
   }
 
   @override
@@ -123,32 +118,41 @@ class _MoviePageState extends State<MoviePage> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(right: 50, top: 70),
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            color: Colors.red,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.red.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 8,
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            // Replace Icon with IconButton
-                            icon: Icon(
-                              Icons.play_arrow,
-                              color: Colors.white,
-                              size: 60,
-                            ),
-                            onPressed: () {
-                              _controller.play();
-                            },
-                          ),
+                    margin: EdgeInsets.only(right: 50, top: 70),
+                    height: 80,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: Colors.red,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.red.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 8,
                         ),
+                      ],
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                        size: 60,
+                      ),
+                      onPressed: () {
+                        if (!_isVideoLoading) {
+                          setState(() {
+                            _isVideoLoading = true;
+                          });
+                          _controller = VideoPlayerController.network(
+                            'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=d8a1570b-e61a-45c6-8cec-011843584623',
+
+                          )..initialize().then((_) {
+                              _controller.play();
+                            });
+                        }
+                      },
+                    ),
+                  ),
                       ],
                     ),
                   ),
@@ -186,19 +190,51 @@ class _MoviePageState extends State<MoviePage> {
             ),
           ),
           if (_isVideoLoading)
-            Center(
-              child: CircularProgressIndicator(), // Loading indicator
-            ),
-          if (!_isVideoLoading && _controller.value.isInitialized)
             Positioned.fill(
               child: AspectRatio(
                 aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
+                child: Stack(
+                  children: [
+                    VideoPlayer(_controller),
+                    Center(
+                      child: IconButton(
+                        icon: Icon(
+                          _controller.value.isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                          color: Colors.white38,
+                          size: 40,
+                          
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (_controller.value.isPlaying) {
+                              _controller.pause();
+                            } else {
+                              _controller.play();
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          if (_isVideoLoading)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                automaticallyImplyLeading: false,
               ),
             ),
         ],
       ),
-      bottomNavigationBar: CustomNavBar(),
+      bottomNavigationBar: _isVideoLoading ? null : CustomNavBar(),
     );
   }
 }
