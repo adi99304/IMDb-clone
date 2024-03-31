@@ -38,7 +38,7 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
     for (final controller in _controllers) {
       await controller.initialize();
       controller.setLooping(false);
-      controller.play();
+      // Play the video by default
       controller.addListener(() {
         if (controller.value.position == controller.value.duration) {
           _carouselController.nextPage();
