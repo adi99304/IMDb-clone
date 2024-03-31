@@ -1,22 +1,6 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Action Genre',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        brightness: Brightness.dark,
-      ),
-      home: ActionDetailPage(),
-    );
-  }
-}
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActionDetailPage extends StatefulWidget {
   @override
@@ -70,6 +54,22 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
     8,
     7.5
   ];
+
+  Future<void> addLikedMovie(String movieName, String moviePosterName) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('profiles').doc(user.email);
+      DocumentSnapshot userSnapshot = await userRef.get();
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+
+      List<dynamic> likedMovies = userData['likedMovies'] ?? [];
+      likedMovies.add({'name': movieName, 'poster': moviePosterName});
+
+      await userRef.set({'likedMovies': likedMovies}, SetOptions(merge: true));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +167,7 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
                               child: Image.asset(
                                 'images/${actionMovies[index]}',
                                 fit: BoxFit.cover,
-                                height: 180.0, // Increased image height
+                                height: 180.0,
                                 width: double.infinity,
                               ),
                             ),
@@ -194,7 +194,7 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
                                       ),
                                       SizedBox(width: 10),
                                       Text(
-                                        '${ratings[index]}', // Display movie rating
+                                        '${ratings[index]}',
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 20),
                                       ),
@@ -216,10 +216,13 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
                                     isLiked[index] ? Colors.red : Colors.grey,
                               ),
                               onPressed: () {
-                                // Handle like button press
                                 setState(() {
                                   isLiked[index] = !isLiked[index];
                                 });
+                                if (isLiked[index]) {
+                                  addLikedMovie(
+                                      movieNames[index], actionMovies[index]);
+                                }
                                 print('Like button pressed');
                               },
                             ),

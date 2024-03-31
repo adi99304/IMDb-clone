@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -76,6 +78,21 @@ class _RomanceDetailPageState extends State<RomanceDetailPage> {
     4.5,
     8.9
   ];
+  Future<void> addLikedMovie(String movieName, String moviePosterName) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('profiles').doc(user.email);
+      DocumentSnapshot userSnapshot = await userRef.get();
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+
+      List<dynamic> likedMovies = userData['likedMovies'] ?? [];
+      likedMovies.add({'name': movieName, 'poster': moviePosterName});
+
+      await userRef.set({'likedMovies': likedMovies}, SetOptions(merge: true));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -222,10 +239,13 @@ class _RomanceDetailPageState extends State<RomanceDetailPage> {
                                     isLiked[index] ? Colors.red : Colors.grey,
                               ),
                               onPressed: () {
-                                // Handle like button press
                                 setState(() {
                                   isLiked[index] = !isLiked[index];
                                 });
+                                if (isLiked[index]) {
+                                  addLikedMovie(
+                                      movieNames[index], romanceMovies[index]);
+                                }
                                 print('Like button pressed');
                               },
                             ),
