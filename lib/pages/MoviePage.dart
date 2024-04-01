@@ -1,6 +1,9 @@
-// 'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=d8a1570b-e61a-45c6-8cec-011843584623',
+//'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FDoctor%20strange.mp4?alt=media&token=10beb4d8-5ae6-4e03-8d87-63ca582fcfe9',
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:project/widgets/CustomNavBar.dart';
 import 'package:project/widgets/MoviePageButtons.dart';
 import 'package:project/widgets/RecommendedWidget.dart';
@@ -12,7 +15,7 @@ class MoviePage extends StatefulWidget {
   final double rating;
   final String movieImage;
   final String description;
-  final String videoUrl;
+  final List<String> videoUrls; // Change type to List<String>
 
   MoviePage({
     required this.movieName,
@@ -20,7 +23,7 @@ class MoviePage extends StatefulWidget {
     required this.rating,
     required this.movieImage,
     required this.description,
-    required this.videoUrl,
+    required this.videoUrls, required String videoUrl, // Change type to List<String>
   });
 
   @override
@@ -30,6 +33,10 @@ class MoviePage extends StatefulWidget {
 class _MoviePageState extends State<MoviePage> {
   late VideoPlayerController _controller;
   bool _isVideoLoading = false;
+  DeviceOrientation? _deviceOrientation;
+  bool _isPlaying = false;
+  late Timer _pauseButtonTimer;
+  bool _showPauseButton = true;
 
   @override
   void initState() {
@@ -37,11 +44,68 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+    _updateOrientation();
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
+    _pauseButtonTimer.cancel();
     super.dispose();
   }
 
+  void _updateOrientation() {
+    final orientation = MediaQuery.of(context).orientation;
+    setState(() {
+      _deviceOrientation = orientation == Orientation.portrait
+          ? DeviceOrientation.portraitUp
+          : DeviceOrientation.landscapeRight;
+    });
+  }
+
+  void _togglePlayPause() {
+    setState(() {
+      if (_controller.value.isPlaying) {
+        _controller.pause();
+        _isPlaying = false;
+      } else {
+        _controller.play();
+        _isPlaying = true;
+      }
+    });
+  }
+
+  void _handlePauseButtonVisibility() {
+    if (_showPauseButton) {
+      _pauseButtonTimer = Timer(Duration(seconds: 2), () {
+        setState(() {
+          _showPauseButton = false;
+        });
+      });
+    } else {
+      setState(() {
+        _showPauseButton = true;
+      });
+    }
+  }
+
+  void _initializeVideoPlayer() {
+  _controller = VideoPlayerController.network(
+    widget.videoUrls[0], // Choose the video URL based on index (e.g., 0 for the first trailer)
+  )..initialize().then((_) {
+      _controller.play();
+      _isPlaying = true;
+      setState(() {});
+    });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,52 +171,49 @@ class _MoviePageState extends State<MoviePage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: ClipRect(
-                              clipper: MovieImageClipper(), // Custom clipper
+                              clipper: MovieImageClipper(),
                               child: Image.asset(
                                 widget.movieImage,
-                                height: 250, // Same height
-                                width: 200, // Increased width
+                                height: 250,
+                                width: 200,
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                         ),
                         Container(
-                    margin: EdgeInsets.only(right: 50, top: 70),
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: Colors.red,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.red.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 8,
+                          margin: EdgeInsets.only(right: 50, top: 70),
+                          height: 80,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            color: Colors.red,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.red.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 8,
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 60,
+                            ),
+                            onPressed: () {
+                              if (!_isVideoLoading) {
+                                setState(() {
+                                  _isVideoLoading = true;
+                                });
+                                _initializeVideoPlayer();
+                              } else {
+                                _togglePlayPause();
+                              }
+                            },
+                          ),
                         ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.play_arrow,
-                        color: Colors.white,
-                        size: 60,
-                      ),
-                      onPressed: () {
-                        if (!_isVideoLoading) {
-                          setState(() {
-                            _isVideoLoading = true;
-                          });
-                          _controller = VideoPlayerController.network(
-                            'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=d8a1570b-e61a-45c6-8cec-011843584623',
-
-                          )..initialize().then((_) {
-                              _controller.play();
-                            });
-                        }
-                      },
-                    ),
-                  ),
                       ],
                     ),
                   ),
@@ -191,36 +252,61 @@ class _MoviePageState extends State<MoviePage> {
           ),
           if (_isVideoLoading)
             Positioned.fill(
-              child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
+              child: GestureDetector(
+                onTap: _handlePauseButtonVisibility,
                 child: Stack(
                   children: [
-                    VideoPlayer(_controller),
-                    Center(
-                      child: IconButton(
-                        icon: Icon(
-                          _controller.value.isPlaying
-                              ? Icons.pause
-                              : Icons.play_arrow,
-                          color: Colors.white38,
-                          size: 40,
-                          
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            if (_controller.value.isPlaying) {
-                              _controller.pause();
-                            } else {
-                              _controller.play();
-                            }
-                          });
-                        },
-                      ),
+                    Container(
+                      color: Colors.black,
                     ),
-                  ],
+                    Center(
+                      child: _deviceOrientation == DeviceOrientation.portraitUp
+                          ? FittedBox(
+                              fit: BoxFit.contain,
+                              child: SizedBox(
+                                width: _controller.value.size.width,
+                                height: _controller.value.size.height,
+                                child: VideoPlayer(_controller),
+                              ),
+                            )
+                          : AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          ),
+                  ),
+                  if (_showPauseButton)
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _togglePlayPause,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueGrey,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 15,
+                    ),
+                  ),
+                  child: Text(
+                    _isPlaying ? 'Pause' : 'Play',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white70
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
+          ),
+      ],
+    ),
+  ),
+),
           if (_isVideoLoading)
             Positioned(
               top: 0,
