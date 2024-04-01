@@ -20,12 +20,21 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
     super.initState();
     _carouselController = CarouselController();
     _videoUrls = [
-      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=ab104d05-624b-42af-90d9-984cdcd6b424',
-      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Doctor%20strange.mp4?alt=media&token=ab104d05-624b-42af-90d9-984cdcd6b424',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FDoctor%20strange.mp4?alt=media&token=10beb4d8-5ae6-4e03-8d87-63ca582fcfe9',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FThe%20Conjuring%20-%20Official%20Main%20Trailer%20%5BHD%5D.mp4?alt=media&token=0e45b008-17ff-4379-b1d2-356ef7840e07',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2F_Thor_%20Ragnarok_%20Official%20Trailer.mp4?alt=media&token=aa3075c8-440c-4ebd-acc1-5148e5a45a9a',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2Fvideoplayback.mp4?alt=media&token=d02e004f-755e-411f-a76d-ec6c4dc56c86',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FTitanic%203D%20Re-Release%20Official%20Trailer%20%231%20-%20Leonardo%20DiCaprio%2C%20Kate%20Winslet%20Movie%20(2012)%20HD.mp4?alt=media&token=57d8ea81-ff2e-4155-98fe-f1a07c41c2d3',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FNO%20HARD%20FEELINGS%20%E2%80%93%20Official%20Red%20Band%20Trailer%20(HD).mp4?alt=media&token=25e651a1-8412-4021-a009-86c0d716568b',
+      
     ];
     _imageUrls = [
-      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2Fdownload%20(2).jpeg?alt=media&token=855787d3-1156-4a18-bd60-00b0c08a36a8',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2Fimages%20(1).jpeg?alt=media&token=1dc93a02-9bd1-4224-b0ee-0030d6004fd8',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2FThe%20Conjuring.jpg?alt=media&token=93b85ddf-187a-4ef0-bd61-c6843bcb2e68',
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2Fimages.jpeg?alt=media&token=e0931de1-0e4b-4912-8ac6-ad843db78edd',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2FMarvels.jpg?alt=media&token=a80f2bc4-d557-4b01-a676-3c212264891c',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2F3.jpg?alt=media&token=ccce6166-deb7-4f60-843f-1d4485333875',
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2FNo%20hard%20feelings.jpeg?alt=media&token=b1a6f202-88f5-4f59-a588-6f433bf53891',
     ];
     _controllers = List.generate(
       _videoUrls.length,
