@@ -15,7 +15,7 @@ class MoviePage extends StatefulWidget {
   final double rating;
   final String movieImage;
   final String description;
-  final String videoUrl;
+  final List<String> videoUrls; // Change type to List<String>
 
   MoviePage({
     required this.movieName,
@@ -23,7 +23,7 @@ class MoviePage extends StatefulWidget {
     required this.rating,
     required this.movieImage,
     required this.description,
-    required this.videoUrl,
+    required this.videoUrls, required String videoUrl, // Change type to List<String>
   });
 
   @override
@@ -56,11 +56,11 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   @override
-void dispose() {
-  _controller.dispose();
-  _pauseButtonTimer.cancel();
-  super.dispose();
-}
+  void dispose() {
+    _controller.dispose();
+    _pauseButtonTimer.cancel();
+    super.dispose();
+  }
 
   void _updateOrientation() {
     final orientation = MediaQuery.of(context).orientation;
@@ -82,18 +82,29 @@ void dispose() {
       }
     });
   }
-void _handlePauseButtonVisibility() {
-  if (_showPauseButton) {
-    _pauseButtonTimer = Timer(Duration(seconds: 2), () {
-      setState(() {
-        _showPauseButton = false;
+
+  void _handlePauseButtonVisibility() {
+    if (_showPauseButton) {
+      _pauseButtonTimer = Timer(Duration(seconds: 2), () {
+        setState(() {
+          _showPauseButton = false;
+        });
       });
-    });
-  } else {
-    setState(() {
-      _showPauseButton = true;
-    });
+    } else {
+      setState(() {
+        _showPauseButton = true;
+      });
+    }
   }
+
+  void _initializeVideoPlayer() {
+  _controller = VideoPlayerController.network(
+    widget.videoUrls[0], // Choose the video URL based on index (e.g., 0 for the first trailer)
+  )..initialize().then((_) {
+      _controller.play();
+      _isPlaying = true;
+      setState(() {});
+    });
 }
   @override
   Widget build(BuildContext context) {
@@ -196,13 +207,7 @@ void _handlePauseButtonVisibility() {
                                 setState(() {
                                   _isVideoLoading = true;
                                 });
-                                _controller = VideoPlayerController.network(
-                                  'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FDoctor%20strange.mp4?alt=media&token=10beb4d8-5ae6-4e03-8d87-63ca582fcfe9',
-                                )..initialize().then((_) {
-                                    _controller.play();
-                                    _isPlaying = true;
-                                    setState(() {});
-                                  });
+                                _initializeVideoPlayer();
                               } else {
                                 _togglePlayPause();
                               }
@@ -246,25 +251,25 @@ void _handlePauseButtonVisibility() {
             ),
           ),
           if (_isVideoLoading)
-           Positioned.fill(
-  child: GestureDetector(
-    onTap: _handlePauseButtonVisibility,
-    child: Stack(
-      children: [
-                  Container(
-                    color: Colors.black,
-                  ),
-                  Center(
-                    child: _deviceOrientation == DeviceOrientation.portraitUp
-                        ? FittedBox(
-                            fit: BoxFit.contain,
-                            child: SizedBox(
-                              width: _controller.value.size.width,
-                              height: _controller.value.size.height,
-                              child: VideoPlayer(_controller),
-                            ),
-                          )
-                        : AspectRatio(
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: _handlePauseButtonVisibility,
+                child: Stack(
+                  children: [
+                    Container(
+                      color: Colors.black,
+                    ),
+                    Center(
+                      child: _deviceOrientation == DeviceOrientation.portraitUp
+                          ? FittedBox(
+                              fit: BoxFit.contain,
+                              child: SizedBox(
+                                width: _controller.value.size.width,
+                                height: _controller.value.size.height,
+                                child: VideoPlayer(_controller),
+                              ),
+                            )
+                          : AspectRatio(
                             aspectRatio: _controller.value.aspectRatio,
                             child: VideoPlayer(_controller),
                           ),
