@@ -41,6 +41,20 @@ class NewMoviesWidget extends StatelessWidget {
     7.8
   ];
 
+  final List<List<String>> videoUrlsList = [
+    [
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FDoctor%20strange.mp4?alt=media&token=10beb4d8-5ae6-4e03-8d87-63ca582fcfe9'
+    ],
+    [
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/videos2%2FThe%20Greatest%20Showman%20_%20Official%20Trailer%20%5BHD%5D%20_%2020th%20Century%20FOX.mp4?alt=media&token=7cb655a6-df7a-465a-a086-d71bedc78ee0',
+    ],
+    [
+      'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/videos2%2FTitanic%203D%20Re-Release%20Official%20Trailer%20%231%20-%20Leonardo%20DiCaprio%2C%20Kate%20Winslet%20Movie%20(2012)%20HD.mp4?alt=media&token=11901a6c-ccba-4505-994a-c4e86dd117e5'
+    ],
+
+    // Add more lists of video URLs for each movie
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -72,7 +86,9 @@ class NewMoviesWidget extends StatelessWidget {
                         movieType: movieTypes[index],
                         rating: ratings[index],
                         movieImage: "images/${index + 1}.jpg",
-                        description: "Your movie description here", videoUrl: '', // Add actual description here
+                        description: "Your movie description here",
+                        videoUrls: videoUrlsList[index],
+                        videoUrl: '', // Pass corresponding video URLs list
                       ),
                     ),
                   );
