@@ -23,7 +23,8 @@ class MoviePage extends StatefulWidget {
     required this.rating,
     required this.movieImage,
     required this.description,
-    required this.videoUrls, required String videoUrl, // Change type to List<String>
+    required this.videoUrls,
+    required String videoUrl, // Change type to List<String>
   });
 
   @override
@@ -98,14 +99,16 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   void _initializeVideoPlayer() {
-  _controller = VideoPlayerController.network(
-    widget.videoUrls[0], // Choose the video URL based on index (e.g., 0 for the first trailer)
-  )..initialize().then((_) {
-      _controller.play();
-      _isPlaying = true;
-      setState(() {});
-    });
-}
+    _controller = VideoPlayerController.network(
+      widget.videoUrls[
+          0], // Choose the video URL based on index (e.g., 0 for the first trailer)
+    )..initialize().then((_) {
+        _controller.play();
+        _isPlaying = true;
+        setState(() {});
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -270,43 +273,42 @@ class _MoviePageState extends State<MoviePage> {
                               ),
                             )
                           : AspectRatio(
-                            aspectRatio: _controller.value.aspectRatio,
-                            child: VideoPlayer(_controller),
-                          ),
-                  ),
-                  if (_showPauseButton)
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: _togglePlayPause,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 15,
+                              aspectRatio: _controller.value.aspectRatio,
+                              child: VideoPlayer(_controller),
+                            ),
                     ),
-                  ),
-                  child: Text(
-                    _isPlaying ? 'Pause' : 'Play',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white70
-                    ),
-                  ),
+                    if (_showPauseButton)
+                      Positioned(
+                        bottom: 20,
+                        left: 0,
+                        right: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _togglePlayPause,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blueGrey,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 30,
+                                  vertical: 15,
+                                ),
+                              ),
+                              child: Text(
+                                _isPlaying ? 'Pause' : 'Play',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white70),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-      ],
-    ),
-  ),
-),
           if (_isVideoLoading)
             Positioned(
               top: 0,

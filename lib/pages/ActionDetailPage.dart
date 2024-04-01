@@ -45,14 +45,6 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
     6.9,
     8,
     9.9,
-    9.1,
-    6,
-    2.9,
-    3,
-    6.8,
-    9,
-    8,
-    7.5
   ];
 
   Future<void> addLikedMovie(String movieName, String moviePosterName) async {
@@ -61,14 +53,26 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
       DocumentReference userRef =
           FirebaseFirestore.instance.collection('profiles').doc(user.email);
       DocumentSnapshot userSnapshot = await userRef.get();
-      Map<String, dynamic> userData =
-          userSnapshot.data() as Map<String, dynamic>;
+      Map<String, dynamic>? userData =
+          userSnapshot.data() as Map<String, dynamic>?;
 
-      List<dynamic> likedMovies = userData['likedMovies'] ?? [];
+      List<dynamic> likedMovies = userData?['likedMovies'] ?? [];
       likedMovies.add({'name': movieName, 'poster': moviePosterName});
 
       await userRef.set({'likedMovies': likedMovies}, SetOptions(merge: true));
     }
+  }
+
+  void _navigateToMovieDetails(String movieName, String moviePoster) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MovieDetailsPage(
+          movieName: movieName,
+          moviePoster: moviePoster,
+        ),
+      ),
+    );
   }
 
   @override
@@ -111,7 +115,8 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
-                        print('Tapped on ${movieNames[index]}');
+                        _navigateToMovieDetails(
+                            movieNames[index], actionMovies[index]);
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
@@ -236,6 +241,209 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Review {
+  final String userId;
+  final String review;
+  final String displayName;
+  final Timestamp timestamp;
+
+  Review({
+    required this.userId,
+    required this.review,
+    required this.displayName,
+    required this.timestamp,
+  });
+
+  factory Review.fromMap(Map<String, dynamic> data) {
+    return Review(
+      userId: data['userId'] ?? '',
+      review: data['review'] ?? '',
+      displayName: data['displayName'] ?? '',
+      timestamp: data['timestamp'] ?? Timestamp.now(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': userId,
+      'review': review,
+      'displayName': displayName,
+      'timestamp': timestamp,
+    };
+  }
+}
+
+class MovieDetailsPage extends StatefulWidget {
+  final String movieName;
+  final String moviePoster;
+
+  MovieDetailsPage({required this.movieName, required this.moviePoster});
+
+  @override
+  _MovieDetailsPageState createState() => _MovieDetailsPageState();
+}
+
+class _MovieDetailsPageState extends State<MovieDetailsPage> {
+  TextEditingController _reviewController = TextEditingController();
+  CollectionReference reviews =
+      FirebaseFirestore.instance.collection('reviews');
+
+  void _submitReview() async {
+    String review = _reviewController.text;
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String userName = user.email!;
+      await reviews.add({
+        'movie': widget.movieName,
+        'review': review,
+        'userName': userName,
+        'timestamp': Timestamp.now(),
+      });
+      _reviewController.clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Review submitted successfully')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please sign in to submit a review')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.movieName, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Description:',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Add description of the movie here...', // You can replace this with actual description
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Reviews:',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: reviews
+                    .where('movie', isEqualTo: widget.movieName)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
+                    return Center(child: Text('No reviews yet.'));
+                  }
+
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var reviewData = snapshot.data!.docs[index].data();
+                      return ReviewTile(
+                          review: Review.fromMap(
+                              reviewData as Map<String, dynamic>));
+                    },
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _reviewController,
+              decoration: InputDecoration(
+                labelText: 'Add your review',
+                border: OutlineInputBorder(),
+              ),
+              minLines: 3,
+              maxLines: 5,
+            ),
+            SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: _submitReview,
+              child: Text('Submit Review'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ReviewTile extends StatelessWidget {
+  final Review review;
+
+  ReviewTile({required this.review});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.black,
+            child: Text(
+              'A', // Display Text A
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          SizedBox(width: 8.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  review.displayName.isNotEmpty
+                      ? review.displayName.substring(0, 2).toUpperCase()
+                      : '',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 4.0),
+                Container(
+                  padding: EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(review.review),
+                ),
+                SizedBox(height: 4.0),
+                Text(
+                  review.timestamp.toDate().toString(),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12.0),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
