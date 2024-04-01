@@ -246,38 +246,6 @@ class _ActionDetailPageState extends State<ActionDetailPage> {
   }
 }
 
-class Review {
-  final String userId;
-  final String review;
-  final String displayName;
-  final Timestamp timestamp;
-
-  Review({
-    required this.userId,
-    required this.review,
-    required this.displayName,
-    required this.timestamp,
-  });
-
-  factory Review.fromMap(Map<String, dynamic> data) {
-    return Review(
-      userId: data['userId'] ?? '',
-      review: data['review'] ?? '',
-      displayName: data['displayName'] ?? '',
-      timestamp: data['timestamp'] ?? Timestamp.now(),
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'review': review,
-      'displayName': displayName,
-      'timestamp': timestamp,
-    };
-  }
-}
-
 class MovieDetailsPage extends StatefulWidget {
   final String movieName;
   final String moviePoster;
@@ -396,6 +364,38 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   }
 }
 
+class Review {
+  final String userId;
+  final String review;
+  final String displayName;
+  final Timestamp timestamp;
+
+  Review({
+    required this.userId,
+    required this.review,
+    required this.displayName,
+    required this.timestamp,
+  });
+
+  factory Review.fromMap(Map<String, dynamic> data) {
+    return Review(
+      userId: data['userId'] ?? '',
+      review: data['review'] ?? '',
+      displayName: data['displayName'] ?? '',
+      timestamp: data['timestamp'] ?? Timestamp.now(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': userId,
+      'review': review,
+      'displayName': displayName,
+      'timestamp': timestamp,
+    };
+  }
+}
+
 class ReviewTile extends StatelessWidget {
   final Review review;
 
@@ -447,4 +447,11 @@ class ReviewTile extends StatelessWidget {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: ActionDetailPage(),
+  ));
 }
