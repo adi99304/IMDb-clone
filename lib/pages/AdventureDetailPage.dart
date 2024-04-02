@@ -31,8 +31,8 @@ class _AdventureDetailPageState extends State<AdventureDetailPage>
   void initState() {
     super.initState();
 
-    _animationController =
-        AnimationController(duration: Duration(milliseconds: 1500), vsync: this);
+    _animationController = AnimationController(
+        duration: Duration(milliseconds: 2000), vsync: this);
     _opacityAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
       parent: _animationController,

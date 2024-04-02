@@ -108,8 +108,10 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Column(
         children: [
+          SizedBox(height: 40),
           Container(
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.symmetric(horizontal: 10),

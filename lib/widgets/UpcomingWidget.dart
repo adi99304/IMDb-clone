@@ -26,7 +26,6 @@ class _UpcomingWidgetState extends State<UpcomingWidget> {
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2Fvideoplayback.mp4?alt=media&token=d02e004f-755e-411f-a76d-ec6c4dc56c86',
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FTitanic%203D%20Re-Release%20Official%20Trailer%20%231%20-%20Leonardo%20DiCaprio%2C%20Kate%20Winslet%20Movie%20(2012)%20HD.mp4?alt=media&token=57d8ea81-ff2e-4155-98fe-f1a07c41c2d3',
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/Videos%2FNO%20HARD%20FEELINGS%20%E2%80%93%20Official%20Red%20Band%20Trailer%20(HD).mp4?alt=media&token=25e651a1-8412-4021-a009-86c0d716568b',
-      
     ];
     _imageUrls = [
       'https://firebasestorage.googleapis.com/v0/b/imdb-1bdbd.appspot.com/o/images%2Fimages%20(1).jpeg?alt=media&token=1dc93a02-9bd1-4224-b0ee-0030d6004fd8',

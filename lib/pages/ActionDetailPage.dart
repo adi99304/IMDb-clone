@@ -287,6 +287,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(widget.movieName, style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.black,
@@ -299,17 +300,23 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           children: [
             Text(
               'Description:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.yellow),
             ),
             SizedBox(height: 8),
             Text(
               'Add description of the movie here...', // You can replace this with actual description
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             SizedBox(height: 16),
             Text(
               'Reviews:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.yellow),
             ),
             SizedBox(height: 8),
             Expanded(
@@ -344,11 +351,18 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             ),
             SizedBox(height: 16),
             TextField(
+              cursorColor: Colors.white,
               controller: _reviewController,
+              style: TextStyle(color: Colors.white), // Set text color to white
               decoration: InputDecoration(
                 labelText: 'Add your review',
                 border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
               ),
+
               minLines: 3,
               maxLines: 5,
             ),
@@ -375,15 +389,16 @@ class Review {
     required this.review,
     required this.displayName,
     required this.timestamp,
+    required MaterialColor color,
   });
 
   factory Review.fromMap(Map<String, dynamic> data) {
     return Review(
-      userId: data['userId'] ?? '',
-      review: data['review'] ?? '',
-      displayName: data['displayName'] ?? '',
-      timestamp: data['timestamp'] ?? Timestamp.now(),
-    );
+        userId: data['userId'] ?? '',
+        review: data['review'] ?? '',
+        displayName: data['displayName'] ?? '',
+        timestamp: data['timestamp'] ?? Timestamp.now(),
+        color: Colors.amber);
   }
 
   Map<String, dynamic> toMap() {
@@ -424,7 +439,9 @@ class ReviewTile extends StatelessWidget {
                   review.displayName.isNotEmpty
                       ? review.displayName.substring(0, 2).toUpperCase()
                       : '',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 4.0),
                 Container(
@@ -438,7 +455,8 @@ class ReviewTile extends StatelessWidget {
                 SizedBox(height: 4.0),
                 Text(
                   review.timestamp.toDate().toString(),
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12.0),
+                  style:
+                      TextStyle(color: Colors.yellow.shade300, fontSize: 12.0),
                 ),
               ],
             ),
